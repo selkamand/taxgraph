@@ -1,0 +1,26 @@
+1	1	root	no rank
+2	1	Bacteria	superkingdom
+1224	2	Actinobacteria	phylum
+1760	1224	Actinomycetia	class
+85007	1760	Actinomycetales	order
+2037	85007	Micrococcaceae	family
+1663	2037	Arthrobacter	genus
+235627	1663	Arthrobacter sp. group	no rank
+999997	235627	Arthrobacter sp. 9.29ST-BP	species
+999996	235627	Arthrobacter sp. 9.22-BP	species
+999995	235627	Arthrobacter sp. 8.25ST-VSa	species
+999994	235627	Arthrobacter sp. 8.16-VSa	species
+999993	235627	Arthrobacter sp. 7.30ST-VPa	species
+999992	235627	Arthrobacter sp. 7.3-VPa	species
+999991	235627	Arthrobacter sp. 7.19-VPa	species
+28211	1224	Gammaproteobacteria	class
+91347	28211	Enterobacterales	order
+543	91347	Enterobacteriaceae	family
+561	543	Escherichia	genus
+562	561	Escherichia coli	species
+2626594	2037	Clavibacter	genus
+999998	2626594	Clavibacter sp. 10.27ST-Bb	species
+2663824	2037	Leifsonia	genus
+999999	2663824	Leifsonia sp. 1.5-VEs	species
+2624150	1224	Herbaspirillum	genus
+999990	2624150	Herbaspirillum sp. BA11	species
