@@ -53,14 +53,14 @@ properties
 ``` r
 library(taxgraph)
 
-# From ktaxonomy (kraken database)
-taxonomy = parse_taxonomy(system.file(package = "taxonomies/ktaxonomy.tsv"), type = "kraken")
-
 # From taxDB file (krakenuniq database)
-taxonomy = parse_taxonomy(system.file(package = "taxonomies/taxDB.tsv"), type = "taxdb")
+taxonomy = parse_taxonomy(system.file(package = "taxgraph", "taxonomies/taxDB"), type = "taxdb")
+
+# From ktaxonomy (kraken database)
+# taxonomy = parse_taxonomy(system.file(package = "taxonomies/ktaxonomy.tsv"), type = "kraken")
 
 # From nodes.dmp and names.dmp (ncbi taxonomy)
-taxonomy = parse_taxonomy(system.file(package = "taxonomies/ncbi.tsv"), type = "ncbi")
+# taxonomy = parse_taxonomy(system.file(package = "taxonomies/ncbi.tsv"), type = "ncbi")
 ```
 
 ### Step 2: Parse Metagenomic Classification Reports
@@ -72,11 +72,11 @@ These functions output a data.frame with at least the following columns
 3.  reads_assigned_directly
 
 ``` r
+# From krakenuniq report
+report_dataframe <- parse_krakenuniq_report(system.file(package = "taxgraph", "reports/krakenuniq.report.tsv"))
 
-# From krakenuniq output
-report_dataframe <- parse_krakenuniq_report(system.file(package = "krakenuniq.report", "reports/krakenuniq.report"))
-
-# TODO: add kraken2 and other taxonomies
+# From Kraken2 report
+# report_dataframe <- parse_kraken_report(system.filepackage = "taxgraph", "reports/kraken2.report.tsv"))
 ```
 
 ### Step 3: Convert tabular metagenomics report to a graph structure
@@ -86,7 +86,7 @@ Use our full taxonomy to turn the tabular report into a graph structure
 
 ``` r
 # Create graph from all taxids in report
-report_graph = report_to_graph(taxonomy, report_dataframe)
+report_graph = report_to_graph(report_dataframe, taxonomy)
 ```
 
 ### Step 4: Visualise
@@ -96,10 +96,46 @@ packages, but we provide some functions that make the most common plot
 types.
 
 ``` r
+#plot_igraph_tree(report_graph)
 plot_sunburst(report_graph)
 plot_sankey(report_graph)
 plot_radial_tree(report_graph)
 ```
+
+### Bonus: Convert to other formats to more easily create your own visualisations
+
+``` r
+library(tidygraph)
+#> 
+#> Attaching package: 'tidygraph'
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
+library(ggraph)
+#> Loading required package: ggplot2
+
+# Convert Igraph to tbl_graph for ggraph visualisations
+tidy_graph <- as_tbl_graph(report_graph)
+
+
+ggraph(tidy_graph, 'treemap', weight = reads_assigned_directly) + 
+  geom_node_tile(aes(fill = fullname), size = 0.25)
+#> Non-leaf weights ignored
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+``` r
+ggraph(tidy_graph, 'dendrogram') + 
+  geom_edge_diagonal()
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ## Similar tools
 

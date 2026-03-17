@@ -15,10 +15,10 @@
 #' @export
 #'
 #' @examples
-parse_taxonomy <- function(path, type = c("taxDB", "ktaxonomy", "ncbi")){
+parse_taxonomy <- function(path, type = c("taxdb", "ktaxonomy", "ncbi")){
   type <- rlang::arg_match(type)
 
-  if(type == "taxDB"){
+  if(type == "taxdb"){
     return(parse_krakenuniq_taxonomy(path))
   }
 

@@ -4,7 +4,7 @@
 \alias{parse_taxonomy}
 \title{Parse taxonomy}
 \usage{
-parse_taxonomy(path, type = c("taxDB", "ktaxonomy", "ncbi"))
+parse_taxonomy(path, type = c("taxdb", "ktaxonomy", "ncbi"))
 }
 \arguments{
 \item{path}{path to a taxonomy file}
