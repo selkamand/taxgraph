@@ -92,7 +92,7 @@ report_to_graph <- function(report, taxonomy, drop_missing = TRUE, min_read_supp
 
   # Return filtered taxonomy (unless `drop_missing = FALSE`, in which case we just annotate the full taxonomy with report results)
   if(drop_missing){
-    subgraph <- taxonomy_filter_for_taxids(taxonomy, report$taxid)
+    subgraph <- taxonomy_filter_for_taxids(taxonomy, taxids_to_keep)
   }
   else
     subgraph <- taxonomy
