@@ -162,13 +162,17 @@ taxonomy_delete_taxid_and_children <- function(taxonomy, taxid){
 #' @examples
 #' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
 #' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' report_dataframe <- parse_krakenuniq_report(
+#'   system.file(package = "taxgraph", "reports/krakenuniq.report.tsv")
+#' )
+#' report_graph = report_to_graph(report_dataframe, taxonomy, drop_missing = FALSE)
 #' # assuming taxonomy has been annotated with read counts
-#' taxonomy_remove_taxids_with_low_read_support(taxonomy, min_reads_covered_by_clade = 10)
+#' taxonomy_remove_taxids_with_low_read_support(report_graph, min_reads_covered_by_clade = 10)
 taxonomy_remove_taxids_with_low_read_support <- function(taxonomy, min_reads_covered_by_clade = 1){
 
   # Grab vertex annotations
   vertex_attributes <- igraph::vertex_attr(taxonomy)
-
+  browser()
   # Check taxonomy is annotated with read support info
   assertions::assert_names_include(
     vertex_attributes,
@@ -177,7 +181,7 @@ taxonomy_remove_taxids_with_low_read_support <- function(taxonomy, min_reads_cov
   )
 
   # Identify taxids to keep
-  taxids_to_keep = vertex_attributes[vertex_attributes$reads_covered_by_clade >= min_reads_covered_by_clade,,drop=FALSE]$name
+  taxids_to_keep = vertex_attributes$name[vertex_attributes$reads_covered_by_clade >= min_reads_covered_by_clade]
 
   # Create subgraph
   taxonomy_filter_for_taxids(taxonomy = taxonomy, taxids = taxids_to_keep)

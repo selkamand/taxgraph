@@ -26,6 +26,10 @@ connectivity where possible.
 \examples{
 path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
 taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+report_dataframe <- parse_krakenuniq_report(
+  system.file(package = "taxgraph", "reports/krakenuniq.report.tsv")
+)
+report_graph = report_to_graph(report_dataframe, taxonomy, drop_missing = FALSE)
 # assuming taxonomy has been annotated with read counts
-taxonomy_remove_taxids_with_low_read_support(taxonomy, min_reads_covered_by_clade = 10)
+taxonomy_remove_taxids_with_low_read_support(report_graph, min_reads_covered_by_clade = 10)
 }
