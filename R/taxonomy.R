@@ -112,8 +112,49 @@ taxonomy_filter_for_ranks <- function(taxonomy, ranks){
   taxonomy_filter_for_taxids(taxonomy, taxids_to_keep)
 }
 
+#' Delete a taxid and all descendants
+#'
+#' Deletes a taxid and all of its children from a taxonomy.
+#'
+#' @param taxonomy taxonomy (igraph) object produced by [parse_taxonomy()]
+#' @param taxid a single taxid to delete.
+#'
+#' @returns A taxonomy (igraph) with `taxid` and all descendants removed.
+#' @export
+#'
+#' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' taxonomy_delete_taxid_and_children(taxonomy, taxid = "10376")
+taxonomy_delete_taxid_and_children <- function(taxonomy, taxid){
+
+  # Assertions
+  assertions::assert_length(taxid, length = 1)
+
+  # Ensure taxid is character (so we match on name not vertex id)
+  taxid <- as.character(taxid)
+
+  # If taxid is not in taxonomy, return taxonomy as-is
+  if(taxonomy_includes_taxids(taxid, taxonomy = taxonomy)){
+    return(taxonomy)
+  }
+
+  # Find all children of taxid
+  lineage_to_delete <- igraph::subcomponent(taxonomy, v = taxid, mode = "out")
+
+  # Delete the vertices and return graph
+  igraph::delete_vertices(taxonomy, v = lineage_to_delete)
+}
+
+
+
+# assert_taxonomy_includes_taxid <- assertions::assert_create(graph_includes_vertices_named, default_error_msg = "Taxonomy does not contain taxid: {arg_value}")
+
 
 # Helpers -----------------------------------------------------------------
+taxonomy_includes_taxids <- function(taxids, taxonomy){
+  all(vertex_names %in% igraph::V(taxonomy)$name)
+}
 
 # For all nodes with no parent in g_incomplete,
 # find whether an ancestral node is present in g_incomplete based on g_complete
