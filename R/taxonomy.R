@@ -189,7 +189,7 @@ taxonomy_remove_taxids_with_low_read_support <- function(taxonomy, min_reads_cov
 
 # Helpers -----------------------------------------------------------------
 taxonomy_includes_taxids <- function(taxids, taxonomy){
-  all(vertex_names %in% igraph::V(taxonomy)$name)
+  all(taxids %in% igraph::V(taxonomy)$name)
 }
 
 # For all nodes with no parent in g_incomplete,
