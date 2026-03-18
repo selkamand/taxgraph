@@ -172,7 +172,7 @@ taxonomy_remove_taxids_with_low_read_support <- function(taxonomy, min_reads_cov
 
   # Grab vertex annotations
   vertex_attributes <- igraph::vertex_attr(taxonomy)
-  browser()
+
   # Check taxonomy is annotated with read support info
   assertions::assert_names_include(
     vertex_attributes,
