@@ -11,6 +11,22 @@ parse_taxonomy(path, type = c("taxdb", "ktaxonomy", "ncbi"))
 
 \item{type}{type of taxonomy file described by path (taxDB, ktaxonomy, ncbi)}
 }
+\value{
+Returns an igraph structure with the following properties
+\itemize{
+\item Directed,
+\item Up to 1 parent per node, multiple children per node allowed)
+\item Nodes with no parent allowed (we do not force a single 'root' node)
+\item \code{name} node attribute represents unique character identifier (usually taxid)
+\item \code{fullname} node attribute represents scientific name
+\item \code{rank} node attribute represents level of taxid in tree (e.g. family/genus/species). Exact terms may change depending on taxonomy type.
+}
+}
 \description{
 Parse taxonomy
+}
+\examples{
+path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+parse_taxonomy(path_to_taxdb, type = "taxdb")
+
 }

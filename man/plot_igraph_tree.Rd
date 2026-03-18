@@ -2,15 +2,23 @@
 % Please edit documentation in R/plot.R
 \name{plot_igraph_tree}
 \alias{plot_igraph_tree}
-\title{Plot a quick igraph tree}
+\title{Plot igraph tree}
 \usage{
 plot_igraph_tree(taxonomy, circular = FALSE)
 }
 \arguments{
-\item{taxonomy}{taxonomy object created from \code{\link[=parse_taxonomy]{parse_taxonomy()}} or}
+\item{taxonomy}{taxonomy object created from \code{\link[=parse_taxonomy]{parse_taxonomy()}} or \code{\link[=report_to_graph]{report_to_graph()}}}
 
-\item{circular}{}
+\item{circular}{make tree radial (flag)}
+}
+\value{
+run for its side effects
 }
 \description{
-Plot a quick igraph tree
+Plot a quick taxonomy tree using base R.
+}
+\examples{
+path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+plot_igraph_tree(taxonomy)
 }

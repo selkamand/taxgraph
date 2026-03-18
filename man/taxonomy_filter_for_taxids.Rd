@@ -20,3 +20,8 @@ For example if you have graph \strong{A -> B -> C -> D} and filter for \strong{B
 all other vertices are removed by vertex suppression, producing the graph:
 \strong{B -> D}
 }
+\examples{
+path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+taxonomy <- parse_taxonomy(path_to_taxdb, type = "taxdb")
+taxonomy_filter_for_taxids(taxonomy, c("10376"))
+}

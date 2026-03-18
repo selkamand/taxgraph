@@ -4,7 +4,7 @@
 #' @param path path to a taxonomy file
 #' @param type type of taxonomy file described by path (taxDB, ktaxonomy, ncbi)
 #'
-#' @returnsThese functions all return an igraph structure with the following properties
+#' @returns Returns an igraph structure with the following properties
 #' - Directed,
 #' - Up to 1 parent per node, multiple children per node allowed)
 #' - Nodes with no parent allowed (we do not force a single 'root' node)
@@ -15,6 +15,9 @@
 #' @export
 #'
 #' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' parse_taxonomy(path_to_taxdb, type = "taxdb")
+#'
 parse_taxonomy <- function(path, type = c("taxdb", "ktaxonomy", "ncbi")){
   type <- rlang::arg_match(type)
 
@@ -68,6 +71,9 @@ parse_krakenuniq_taxonomy <- function(path){
 #' @export
 #'
 #' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' taxonomy <- parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' taxonomy_filter_for_taxids(taxonomy, c("10376"))
 taxonomy_filter_for_taxids <- function(taxonomy, taxids){
 
   # Standardise taxid format
@@ -82,6 +88,21 @@ taxonomy_filter_for_taxids <- function(taxonomy, taxids){
   return(g_filtered_reconnected)
 }
 
+#' Filter for specific ranks
+#'
+#' Filters a taxonomy for nodes with rank in `ranks`, while preserving
+#' connectivity where possible.
+#'
+#' @param taxonomy taxonomy (igraph) object produced by [parse_taxonomy()]
+#' @param ranks a vector of ranks to filter for.
+#'
+#' @returns A subgraph (igraph) of taxonomy including only specified `ranks`.
+#' @export
+#'
+#' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' taxonomy_filter_for_ranks(taxonomy, ranks = c("family", "genus", "species"))
 taxonomy_filter_for_ranks <- function(taxonomy, ranks){
 
   # Identify Taxids to keep
@@ -91,6 +112,8 @@ taxonomy_filter_for_ranks <- function(taxonomy, ranks){
   taxonomy_filter_for_taxids(taxonomy, taxids_to_keep)
 }
 
+
+# Helpers -----------------------------------------------------------------
 
 # For all nodes with no parent in g_incomplete,
 # find whether an ancestral node is present in g_incomplete based on g_complete
