@@ -1,3 +1,7 @@
+
+# Parsing Reports ---------------------------------------------------------
+
+
 parse_krakenuniq_report_as_graph <- function(path_report, path_taxonomy){
 
 }
@@ -72,17 +76,18 @@ parse_kraken_report <- function(path){
 #'
 #' @param report A `data.table` with at least `taxid` and `reads_covered_by_clade`.
 #' @param taxonomy An `igraph` taxonomy graph with vertex attribute `name` (taxid).
-#' @param drop_missing Logical; if `TRUE`, restrict the taxonomy to taxids present
-#'   in the report.
-#'
+#' @param drop_missing if `TRUE`, restrict the taxonomy to taxids present
+#'   in the report (flag).
+#' @param min_read_support only applied when `drop_missing = TRUE`. minimum number of reads/fragments that must be assigned to each clade (or its children) to consider the taxid 'present' in the report.
+#' Can always keep this low and filter more aggressively later on using [taxonomy_remove_taxids_with_low_read_support()] (number)
 #' @return An `igraph` object with vertex-level read count attributes.
 #'
 #' @export
-report_to_graph <- function(report, taxonomy, drop_missing = TRUE){
+report_to_graph <- function(report, taxonomy, drop_missing = TRUE, min_read_support = 1){
   assertions::assert_names_include(report, "taxid", "reads_covered_by_clade")
 
   # Filter report for taxids with at least 1 supporting read
-  taxids_to_keep <- report$taxid[report$reads_covered_by_clade > 0]
+  taxids_to_keep <- report$taxid[report$reads_covered_by_clade >= min_read_support]
   taxids_to_keep <- as.character(taxids_to_keep)
 
   # Return filtered taxonomy (unless `drop_missing = FALSE`, in which case we just annotate the full taxonomy with report results)
@@ -93,7 +98,6 @@ report_to_graph <- function(report, taxonomy, drop_missing = TRUE){
     subgraph <- taxonomy
 
   # Annotate with report counts
-
   subgraph_annotated <- taxonomy_annotate_with_report_counts(subgraph, report)
 
   # Return result

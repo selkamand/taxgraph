@@ -146,10 +146,42 @@ taxonomy_delete_taxid_and_children <- function(taxonomy, taxid){
   igraph::delete_vertices(taxonomy, v = lineage_to_delete)
 }
 
+#' Remove taxids with low read support
+#'
+#' Filters a taxonomy to retain only nodes with `reads_covered_by_clade`
+#' greater than or equal to `min_reads_covered_by_clade`, while preserving
+#' connectivity where possible.
+#'
+#' @param taxonomy taxonomy (igraph) object produced by [parse_taxonomy()]
+#'   and annotated with `reads_covered_by_clade`.
+#' @param min_reads_covered_by_clade minimum reads required to retain a taxid.
+#'
+#' @returns A subgraph (igraph) of taxonomy including only supported taxids.
+#' @export
+#'
+#' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' # assuming taxonomy has been annotated with read counts
+#' taxonomy_remove_taxids_with_low_read_support(taxonomy, min_reads_covered_by_clade = 10)
+taxonomy_remove_taxids_with_low_read_support <- function(taxonomy, min_reads_covered_by_clade = 1){
 
+  # Grab vertex annotations
+  vertex_attributes <- igraph::vertex_attr(taxonomy)
 
-# assert_taxonomy_includes_taxid <- assertions::assert_create(graph_includes_vertices_named, default_error_msg = "Taxonomy does not contain taxid: {arg_value}")
+  # Check taxonomy is annotated with read support info
+  assertions::assert_names_include(
+    vertex_attributes,
+    names = "reads_covered_by_clade",
+    msg = "Cannot find `reads_covered_by_clade` vertex attribute in taxonomy. Please ensure taxonomy has been generated from metagenomics report or if from parsed taxonomy has been annotated with reads_covered_by_clade"
+  )
 
+  # Identify taxids to keep
+  taxids_to_keep = vertex_attributes[vertex_attributes$reads_covered_by_clade >= min_reads_covered_by_clade,,drop=FALSE]$name
+
+  # Create subgraph
+  taxonomy_filter_for_taxids(taxonomy = taxonomy, taxids = taxids_to_keep)
+}
 
 # Helpers -----------------------------------------------------------------
 taxonomy_includes_taxids <- function(taxids, taxonomy){

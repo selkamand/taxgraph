@@ -4,15 +4,18 @@
 \alias{report_to_graph}
 \title{Convert a Kraken report to an annotated taxonomy graph}
 \usage{
-report_to_graph(report, taxonomy, drop_missing = TRUE)
+report_to_graph(report, taxonomy, drop_missing = TRUE, min_read_support = 1)
 }
 \arguments{
 \item{report}{A \code{data.table} with at least \code{taxid} and \code{reads_covered_by_clade}.}
 
 \item{taxonomy}{An \code{igraph} taxonomy graph with vertex attribute \code{name} (taxid).}
 
-\item{drop_missing}{Logical; if \code{TRUE}, restrict the taxonomy to taxids present
-in the report.}
+\item{drop_missing}{if \code{TRUE}, restrict the taxonomy to taxids present
+in the report (flag).}
+
+\item{min_read_support}{only applied when \code{drop_missing = TRUE}. minimum number of reads/fragments that must be assigned to each clade (or its children) to consider the taxid 'present' in the report.
+Can always keep this low and filter more aggressively later on using \code{\link[=taxonomy_remove_taxids_with_low_read_support]{taxonomy_remove_taxids_with_low_read_support()}} (number)}
 }
 \value{
 An \code{igraph} object with vertex-level read count attributes.
