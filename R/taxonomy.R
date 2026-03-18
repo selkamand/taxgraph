@@ -146,6 +146,38 @@ taxonomy_delete_taxid_and_children <- function(taxonomy, taxid){
   igraph::delete_vertices(taxonomy, v = lineage_to_delete)
 }
 
+#' Filter for a taxid and its descendants
+#'
+#' Returns a subgraph containing a taxid and all of its descendants.
+#'
+#' @param taxonomy taxonomy (igraph) object produced by [parse_taxonomy()]
+#' @param taxid a single taxid to retain along with its descendants.
+#'
+#' @returns A subgraph (igraph) containing `taxid` and all descendant nodes.
+#' @export
+#'
+#' @examples
+#' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
+#' taxonomy_filter_for_descendants(taxonomy, taxid = "10376")
+taxonomy_filter_for_descendants <- function(taxonomy, taxid){
+
+  # Assertions
+  assertions::assert_length(taxid, length = 1)
+
+  # Ensure taxid is character (so we match on name not vertex id)
+  taxid <- as.character(taxid)
+
+  # If taxid is not in taxonomy - Return emtpy taxonomy (TODO: FIGURE OUT HOW TO DO THIS)
+
+  # Find all children of taxid
+  lineage_to_keep <- igraph::subcomponent(taxonomy, v = taxid, mode = "out")
+
+  # Create a subgraph on only a specific lineage.
+  igraph::subgraph(taxonomy, vids = as.numeric(lineage_to_keep))
+}
+
+
 #' Remove taxids with low read support
 #'
 #' Filters a taxonomy to retain only nodes with `reads_covered_by_clade`
