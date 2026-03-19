@@ -15,7 +15,7 @@
 #' @export
 #'
 flagstats_to_total_primary_reads <- function(flagstats){
-  flagstat_line2 <- readLines(flagstats, n=2)[2]:w
+  flagstat_line2 <- readLines(flagstats, n=2)[2]
   csv_string <- sub(x = flagstat_line2, pattern = "([0-9]+) \\+ ([0-9]+) .*", replacement = "\\1,\\2")
   total_primary <- utils::read.csv(text = csv_string, header = FALSE, col.names = c("qc_passed", "qc_failed"))
   total_primary$total <- total_primary$qc_passed + total_primary$qc_failed
