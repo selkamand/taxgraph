@@ -224,6 +224,10 @@ taxonomy_includes_taxids <- function(taxids, taxonomy){
   all(taxids %in% igraph::V(taxonomy)$name)
 }
 
+is_valid_attribute <- function(taxonomy, attribute_name){
+  attrs <- igraph::vertex_attr_names(taxonomy)
+}
+
 # For all nodes with no parent in g_incomplete,
 # find whether an ancestral node is present in g_incomplete based on g_complete
 taxonomy_complete_connections <- function(g_incomplete, g_complete){
