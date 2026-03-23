@@ -30,8 +30,13 @@ plot_ggraph_tree <- function(taxonomy){
 #'
 #' @examples
 #' path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+#' path_to_report = system.file(package= "taxgraph", "reports/krakenuniq.report.tsv")
+#'
 #' taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
-#' plot_sunburst_plotly(taxonomy)
+#' report_dataframe = parse_krakenuniq_report(path_to_report)
+#'
+#' report_graph = report_to_graph(report_dataframe, taxonomy)
+#' plot_sunburst_plotly(report_graph)
 plot_sunburst_plotly <- function(taxonomy, force = FALSE){
 
   # assert size parameter is valid
@@ -51,7 +56,7 @@ plot_sunburst_plotly <- function(taxonomy, force = FALSE){
   # Convert igraph to annotated long data.frame
   df <- igraph::as_long_data_frame(taxonomy)
 
-  plot_ly(
+  plotly::plot_ly(
     labels = df$to_fullname,
     parents = df$from_fullname,
     values = df[[size_based_on]],

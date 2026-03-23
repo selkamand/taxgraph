@@ -19,6 +19,11 @@ Plot a sunburst chart from a taxonomy graph
 }
 \examples{
 path_to_taxdb = system.file(package="taxgraph", "taxonomies/taxDB")
+path_to_report = system.file(package= "taxgraph", "reports/krakenuniq.report.tsv")
+
 taxonomy = parse_taxonomy(path_to_taxdb, type = "taxdb")
-plot_sunburst_plotly(taxonomy)
+report_dataframe = parse_krakenuniq_report(path_to_report)
+
+report_graph = report_to_graph(report_dataframe, taxonomy)
+plot_sunburst_plotly(report_graph)
 }
