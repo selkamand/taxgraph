@@ -59,7 +59,7 @@ plot_sunburst_plotly <- function(taxonomy, force = FALSE){
   plotly::plot_ly(
     labels = df$to_fullname,
     parents = df$from_fullname,
-    values = df[[size_based_on]],
+    values = df[[paste0("to_", size_based_on)]],
     type = 'sunburst',
     branchvalues = 'total'
   )
