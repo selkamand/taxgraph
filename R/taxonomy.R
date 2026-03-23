@@ -135,7 +135,7 @@ taxonomy_delete_taxid_and_children <- function(taxonomy, taxid){
   taxid <- as.character(taxid)
 
   # If taxid is not in taxonomy, return taxonomy as-is
-  if(taxonomy_includes_taxids(taxid, taxonomy = taxonomy)){
+  if(!taxonomy_includes_taxids(taxid, taxonomy = taxonomy)){
     return(taxonomy)
   }
 
